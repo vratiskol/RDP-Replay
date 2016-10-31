@@ -65,7 +65,7 @@ static const char *PopVid(VidInfo *vi, const char *filename, int width, int heig
     vi->ctx->oformat = av_guess_format(0,filename,0) ;
     if (!vi->ctx->oformat)
         return "Could not deduce output format" ;
-    if (vi->ctx->oformat->video_codec == CODEC_ID_NONE)
+    if (vi->ctx->oformat->video_codec == AV_CODEC_ID_NONE)
         return "Not a video format" ;
     if (avio_open(&vi->ctx->pb, filename, AVIO_FLAG_WRITE))
         return "Failed to open output" ;
@@ -199,7 +199,8 @@ int write_frame(void *vp, const XImage *ximg)
     }
     else
     {
-        int out_size = avcodec_encode_video(c, vi->buff, vi->buff_len, vi->pic) ;
+        int got_output;
+        int out_size = avcodec_encode_video2(c, &pkt, vi->pic, &got_output) ;
         /* if zero size, it means the image was buffered */
         if (out_size > 0) {
 
@@ -208,8 +209,6 @@ int write_frame(void *vp, const XImage *ximg)
             if(c->coded_frame->key_frame)
                 pkt.flags      |= AV_PKT_FLAG_KEY ;
             pkt.stream_index    = vi->strm->index ;
-            pkt.data            = vi->buff ;
-            pkt.size            = out_size ;
             ret                 = av_interleaved_write_frame(vi->ctx, &pkt) ;
         }
     }
