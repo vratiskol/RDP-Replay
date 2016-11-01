@@ -49,13 +49,6 @@ boolean freerdp_connect(freerdp* instance)
 
 	if (status)
 	{
-		if (instance->settings->dump_rfx)
-		{
-			instance->update->pcap_rfx = pcap_open(instance->settings->dump_rfx_file, true);
-			if (instance->update->pcap_rfx)
-				instance->update->dump_rfx = true;
-		}
-
 		extension_post_connect(rdp->extension);
 
 		IFCALLRET(instance->PostConnect, status, instance);
@@ -64,38 +57,6 @@ boolean freerdp_connect(freerdp* instance)
 		{
 			printf("freerdp_post_connect failed\n");
 			return false;
-		}
-
-		if (instance->settings->play_rfx)
-		{
-			STREAM* s;
-			rdpUpdate* update;
-			pcap_record record;
-
-			s = stream_new(1024);
-			instance->update->pcap_rfx = pcap_open(instance->settings->play_rfx_file, false);
-			if (instance->update->pcap_rfx)
-				instance->update->play_rfx = true;
-			update = instance->update;
-
-			while (instance->update->play_rfx && pcap_has_next_record(update->pcap_rfx))
-			{
-				pcap_get_next_record_header(update->pcap_rfx, &record);
-
-				s->data = xrealloc(s->data, record.length);
-				record.data = s->data;
-				s->size = record.length;
-
-				pcap_get_next_record_content(update->pcap_rfx, &record);
-				stream_set_pos(s, 0);
-
-				update->BeginPaint(update->context);
-				update_recv_surfcmds(update, s->size, s);
-				update->EndPaint(update->context);
-			}
-
-			xfree(s->data);
-			return true;
 		}
 	}
 

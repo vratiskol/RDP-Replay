@@ -33,7 +33,6 @@ set(FREERDP_UTILS_SRCS
 	memory.c
 	mutex.c
 	passphrase.c
-	pcap.c
 	profiler.c
 	rail.c
 	rect.c

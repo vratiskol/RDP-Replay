@@ -17,7 +17,6 @@
  * limitations under the License.
  */
 
-#include <freerdp/utils/pcap.h>
 
 #include "surface.h"
 
@@ -89,11 +88,6 @@ boolean update_recv_surfcmds(rdpUpdate* update, uint32 size, STREAM* s)
 
 		size -= cmdLength;
 
-		if (update->dump_rfx)
-		{
-			pcap_add_record(update->pcap_rfx, mark, cmdLength + 2);
-			pcap_flush(update->pcap_rfx);
-		}
 	}
 	return true;
 }

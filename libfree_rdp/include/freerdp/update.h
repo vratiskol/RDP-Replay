@@ -26,7 +26,7 @@ typedef struct rdp_update rdpUpdate;
 #include <freerdp/types.h>
 #include <freerdp/freerdp.h>
 #include <freerdp/graphics.h>
-#include <freerdp/utils/pcap.h>
+// #include <freerdp/utils/pcap.h>
 #include <freerdp/utils/stream.h>
 
 #include <freerdp/primary.h>
@@ -177,7 +177,7 @@ struct rdp_update
 
 	boolean dump_rfx;
 	boolean play_rfx;
-	rdpPcap* pcap_rfx;
+	// rdpPcap* pcap_rfx;
 
 	BITMAP_UPDATE bitmap_update;
 	PALETTE_UPDATE palette_update;

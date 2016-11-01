@@ -12,7 +12,8 @@ debug: all
 debug: CPPFLAGS+=-g -ggdb
 
 FREERDP_FLAGS =-DWITH_XINERAMA -DWITH_XCURSOR -DWITH_XV -DWITH_XEXT -DEXT_PATH=\"/usr/lib/freerdp/extensions\" -std=gnu89
-CPPFLAGS     += ${FREERDP_INC_DIR} -I. ${FREERDP_FLAGS}
+CPPFLAGS     += -fPIC ${FREERDP_INC_DIR} -I. ${FREERDP_FLAGS}
+LD_FLAGS      += -shared
 LIBS         += -lXrandr -lXcursor -lXinerama -lXv -lxkbfile -lXext -lX11 -lpcap -lpthread -ldl
 LIBS         += -lasound
 
@@ -52,19 +53,19 @@ CPPFLAGS += -I${FREE_HOME}/client/X11
 CPPFLAGS += -I${FREE_HOME}/channels/rdpsnd
 
 # Things we need from tools
-CXX_SOURCE += ${TOOLS}/ssl_decrypt.C ${TOOLS}/buffer.C ${TOOLS}/pcap_delay.C ${TOOLS}/pkt_pro.C
+CXX_SOURCE += ${TOOLS}/pcap_delay.C ${TOOLS}/pkt_pro.C
 CPPFLAGS   += -I${TOOLS}
-LIBS       += -lcrypto /usr/lib/x86_64-linux-gnu/libssl.a
+LIBS       += -lcrypto -lssl -lssl3
 
 
 # New programs. Main items, if you like.
 #
-OUR_OBJ    += librdp.o play_vid.o chan_rdpsnd.o chan_rdpdr.o
+OUR_OBJ    += librdp.o play_vid.o chan_rdpsnd.o chan_rdpdr.o ${TOOLS}/ssl_decrypt.o ${TOOLS}/buffer.o
 LIBS       += -lavformat -lavcodec -lavutil
-CXX_SOURCE += rdp_replay.C
 
 rdp_replay: ${CXX_SOURCE} ${OUR_OBJ} ${EXT_OBJ}
-	g++ ${CPPFLAGS} -o $@ ${CXX_SOURCE} ${OUR_OBJ} ${EXT_OBJ} ${LD_FLAGS} ${LIBS}
+	g++ ${CPPFLAGS} ${OUR_OBJ} ${EXT_OBJ} ${LD_FLAGS} ${LIBS}
+	ar  rcs lib$@.a ${OUR_OBJ} ${EXT_OBJ}
 
 clean:
-	rm -rf ${OUR_OBJ} rdp_replay
+	rm -rf ${OUR_OBJ} rdp_replay.*
