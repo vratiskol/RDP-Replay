@@ -443,9 +443,11 @@ ssl_processor::ssl_buff::ssl_buff() :
 {
     // FIXME: This leaks.
     // FIXME: Might not be TLS?
-    if (!glob_ctx)
-        glob_ctx = SSL_CTX_new(TLSv1_method()) ;
     if (!glob_ctx) {
+        glob_ctx = SSL_CTX_new(TLSv1_method()) ;
+    }
+    if (!glob_ctx) {
+        printf("SSL_CTX_new() failed: openssl error string:\n");
         SSL_load_error_strings() ;
         ERR_load_crypto_strings() ;
         ERR_print_errors_fp(stdout) ;
@@ -722,8 +724,8 @@ bool ssl_processor::client(const uint8_t *data, size_t len)
                 size_t olen = m_cli.decrypt(p, out, plen) ;
                 if (-1 == (int)olen)
                 {
-                    m_error = true ;
-printf("SSL: Decrypt failed\n") ;
+                    //m_error = true ;
+                    printf("SSL: Decrypt failed\n") ;
                     return false ;
                 }
                 if (0x17 == p[0])
@@ -734,7 +736,7 @@ printf("SSL: Decrypt failed\n") ;
                 m_err_msg = parse(p,plen,true) ;
                 if (m_err_msg)
                 {
-printf("SSL-ERROR: %s\n", m_err_msg) ;
+                    printf("SSL-ERROR: %s\n", m_err_msg) ;
                     m_error = true ;
                     return false ;
                 }
@@ -759,8 +761,8 @@ bool ssl_processor::server(const uint8_t *data, size_t len)
                 size_t olen = m_srv.decrypt(p, out, plen) ;
                 if (-1 == (int)olen)
                 {
-                    m_error = true ;
-printf("SSL: Decrypt failed\n") ;
+                    //m_error = true ;
+                    printf("SSL: Decrypt failed\n") ;
                     return false ;
                 }
                 if (0x17 == p[0])
