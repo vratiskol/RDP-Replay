@@ -200,10 +200,8 @@ int write_frame(void *vp, const XImage *ximg)
     else
     {
         int got_output;
-        int out_size = avcodec_encode_video2(c, &pkt, vi->pic, &got_output) ;
-        /* if zero size, it means the image was buffered */
-        if (out_size > 0) {
-
+        int retval = avcodec_encode_video2(c, &pkt, vi->pic, &got_output) ;
+        if (got_output) {
             if (c->coded_frame->pts != AV_NOPTS_VALUE)
                 pkt.pts         = av_rescale_q(c->coded_frame->pts, c->time_base, vi->strm->time_base) ;
             if(c->coded_frame->key_frame)

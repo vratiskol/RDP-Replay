@@ -8,7 +8,7 @@
 #define FREERDP_VERSION_REVISION 1
 
 #define FREERDP_DATA_PATH "/usr/local/share/freerdp"
-#define FREERDP_PLUGIN_PATH "/usr/local/lib/x86_64-linux-gnu/freerdp"
+#define FREERDP_PLUGIN_PATH "/usr/local/lib/freerdp"
 #define FREERDP_KEYMAP_PATH "/usr/local/share/freerdp/keymaps"
 
 /* Include files */

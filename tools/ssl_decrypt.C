@@ -724,7 +724,7 @@ bool ssl_processor::client(const uint8_t *data, size_t len)
                 size_t olen = m_cli.decrypt(p, out, plen) ;
                 if (-1 == (int)olen)
                 {
-                    //m_error = true ;
+                    m_error = true ;
                     printf("SSL: Decrypt failed\n") ;
                     return false ;
                 }
@@ -761,7 +761,7 @@ bool ssl_processor::server(const uint8_t *data, size_t len)
                 size_t olen = m_srv.decrypt(p, out, plen) ;
                 if (-1 == (int)olen)
                 {
-                    //m_error = true ;
+                    m_error = true ;
                     printf("SSL: Decrypt failed\n") ;
                     return false ;
                 }
@@ -773,7 +773,7 @@ bool ssl_processor::server(const uint8_t *data, size_t len)
                 m_err_msg = parse(p,plen,false) ;
                 if (m_err_msg)
                 {
-printf("SSL-ERROR: %s\n", m_err_msg) ;
+                    printf("SSL-ERROR: %s\n", m_err_msg) ;
                     m_error = true ;
                     return false ;
                 }
