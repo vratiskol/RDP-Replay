@@ -77,7 +77,7 @@ static const char *PopVid(VidInfo *vi, const char *filename, int width, int heig
         return "Could not create video stream" ;
 
     // Fill in ooperting parameters
-    vi->strm->codec->pix_fmt        = PIX_FMT_YUV420P ;
+    vi->strm->codec->pix_fmt        = AV_PIX_FMT_YUV420P ;
     vi->strm->codec->flags          = 0 ;
     vi->strm->codec->bit_rate       = 500000 ;
     vi->strm->codec->width          = width ;
